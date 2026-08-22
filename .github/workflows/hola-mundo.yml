@@ -1,0 +1,26 @@
+name: Hola Mundo CI
+
+on:
+  push:
+    branches: [develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  saludo:
+    name: Saludo de verificación
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar código
+        uses: actions/checkout@v4
+
+      - name: Saludar
+        run: |
+          echo "Hola Mundo desde GitHub Actions"
+          echo "Repositorio: $GITHUB_REPOSITORY"
+          echo "Ref/rama: $GITHUB_REF_NAME"
+          echo "Ejecutado por: $GITHUB_ACTOR"
+
+      - name: Mostrar fecha
+        run: date
