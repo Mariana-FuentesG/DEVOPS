@@ -1,0 +1,8 @@
+services:
+  cupones-svc:
+    build: .
+    image: duoc/caso05-cupones:1.0.0
+    container_name: caso05-cupones-svc
+    ports:
+      - "${PORT:-8080}:8080"
+    restart: unless-stopped

@@ -1,0 +1,26 @@
+@startuml C4-2-Contenedores
+!include <C4/C4_Container>
+
+title ms-cupones — C4 Nivel 2: Contenedores
+
+LAYOUT_WITH_LEGEND()
+
+Person(actor, "Cliente", "Arma pedidos y paga")
+System_Boundary(sb, "ms-cupones (dominio de Cupones)") {
+  Container(api, "API de Cupones", "Spring Boot 3 · Java 21 · ECS Fargate", "Expone /api/cupones y persiste el dominio con su propia base de datos")
+  ContainerDb(db, "BD del catálogo", "Aurora Serverless (PostgreSQL)", "Cupones del dominio (propia del servicio)")
+  Container(cache, "Caché de lecturas", "Amazon ElastiCache (Redis)", "Respuestas frecuentes (Cache-Aside)")
+}
+
+Container(apigw, "API Gateway", "Amazon API Gateway", "JWT + throttling")
+Container(cdn, "Amazon CloudFront", "CDN", "Sirve el catálogo desde el edge")
+Container(ev, "Amazon EventBridge", "Servicio AWS", "Eventos de publicación del catálogo")
+
+Rel(actor, apigw, "Usa la API", "HTTPS + JWT")
+Rel(apigw, api, "Enruta /api/cupones", "REST")
+Rel(api, cache, "Consulta la caché", "RESP")
+Rel(api, db, "Lee/escribe catálogo", "JPA / SQL (TLS)")
+Rel(api, ev, "Publica cambios de catálogo", "AWS SDK")
+
+SHOW_LEGEND()
+@enduml

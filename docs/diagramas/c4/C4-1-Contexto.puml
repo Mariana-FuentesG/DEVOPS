@@ -1,0 +1,23 @@
+@startuml C4-1-Contexto
+!include <C4/C4_Context>
+
+title ms-cupones — C4 Nivel 1: Contexto
+
+LAYOUT_WITH_LEGEND()
+
+Person(actor, "Cliente", "Arma pedidos y paga")
+System(sys, "ms-cupones", "Cupones del caso caso05: administra el catálogo del dominio: publicar, mantener y permitir buscar y consultar los recursos con alta disponibilidad y baja latencia, alimentando al resto del sistema con información vigente")
+
+System_Ext(core, "ms-pedidos", "Pedidos del caso (servicio central)")
+System_Ext(notif, "ms-notificaciones", "Notificaciones del caso")
+System_Ext(cognito, "Amazon Cognito", "Autenticación y JWT por rol")
+System_Ext(bus, "Amazon EventBridge", "Bus de eventos de dominio")
+
+Rel(actor, sys, "Usa el servicio", "HTTPS / REST + JWT")
+Rel(sys, core, "Pedidos del caso (servicio central)", "REST / eventos")
+Rel_Back(notif, sys, "Notificaciones del caso", "EventBridge / SQS")
+Rel_Back(cognito, sys, "Autenticación y JWT por rol", "JWT")
+Rel(sys, bus, "Bus de eventos de dominio", "AWS SDK")
+
+SHOW_LEGEND()
+@enduml

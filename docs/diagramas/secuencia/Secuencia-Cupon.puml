@@ -1,0 +1,47 @@
+@startuml Secuencia-Cupon
+title ms-cupones — Diagrama de secuencia: consulta con caché y publicación
+
+skinparam responseMessageBelowArrow true
+skinparam maxMessageSize 320
+skinparam sequenceMessageAlignment center
+skinparam roundCorner 8
+autonumber "<b>0."
+
+participant "App Cliente" as app #D5E8D4
+participant "API Gateway" as gw #DAE8FC
+box "ms-cupones" #FFF2CC
+  participant "CuponController" as rest
+  participant "CuponService" as svc
+  participant "CacheClient" as cache
+  participant "Repository" as repo
+end box
+participant "ElastiCache" as rds #F8CECC
+participant "EventBridge" as ev #F8CECC
+
+== Consulta con caché (Cache-Aside) ==
+app -> gw : GET /api/cupones?filtro=...
+gw -> rest : valida JWT y enruta
+rest -> svc : buscar(filtros)
+svc -> cache : GET clave de consulta
+cache --> svc : MISS (primera vez)
+svc -> repo : consulta SQL con filtros
+repo --> svc : resultados
+svc -> cache : SET resultado (TTL corto)
+rest --> app : 200 OK (resultados)
+
+== Publicación de un recurso ==
+app -> gw : POST /api/cupones (rol editor)
+gw -> rest : valida JWT + rol
+rest -> svc : validar y publicar
+svc -> repo : persiste el recurso
+svc -> ev : publica catalogo.actualizado
+svc -> cache : INVALIDA la clave afectada
+rest --> app : 201 Created
+note over cache, rds
+  <b>Cache-Aside (RNF de rendimiento)</b>
+  Las consultas repetidas responden en milisegundos
+  desde ElastiCache; la invalidación en la escritura
+  mantiene la coherencia con la BD.
+end note
+
+@enduml

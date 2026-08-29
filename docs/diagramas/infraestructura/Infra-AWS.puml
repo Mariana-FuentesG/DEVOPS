@@ -1,0 +1,65 @@
+@startuml Infra-AWS
+' =====================================================================
+' ms-cupones — Infraestructura AWS (solo este microservicio)
+'   Rojo  = controles de seguridad (IE7)
+'   Azul  = puntos de monitoreo (IE8)
+' =====================================================================
+!include <awslib/all>
+!include <awslib/Groups/VPC.puml>
+!include <awslib/Groups/PrivateSubnet.puml>
+!include <awslib/Groups/SecurityGroup.puml>
+
+title ms-cupones — Infraestructura AWS (caso caso05 · FoodGo)
+
+skinparam defaultTextAlignment center
+skinparam roundCorner 8
+skinparam ArrowColor #37474F
+skinparam nodesep 30
+skinparam ranksep 40
+
+Users(users, "Cliente", "Arma pedidos y paga")
+APIGateway(apigw, "API Gateway", "ruta /api/cupones\nJWT + throttling")
+Cognito(cognito, "Cognito", "JWT por rol")
+
+VPCGroup(vpc, "VPC FoodGo")
+package "Clúster ECS · servicio ms-cupones (auto scaling 3→12 tareas)" as ecs {
+  Fargate(taskA, "Tarea 1 · us-east-1a", "cupones-svc")
+  Fargate(taskB, "Tarea 2 · us-east-1b", "cupones-svc")
+}
+ElasticLoadBalancing(alb, "ALB · target group ms-cupones", "health check /actuator/health")
+Aurora(aurora, "Aurora · BD cupones", "datos del dominio\nTLS + cifrado KMS")
+ElastiCache(redis, "ElastiCache Redis", "caché de lecturas (Cache-Aside)")
+CloudWatch(cw, "CloudWatch + X-Ray", "métricas, alarmas y trazas\ndel target group")
+KeyManagementService(kms, "KMS", "cifrado at-rest")
+SecretsManager(secrets, "Secrets Manager", "credencial de la BD\n(rotación automática)")
+IdentityAccessManagementPermissions(iam, "IAM task role", "permisos mínimos por tarea")
+CloudTrail(trail, "CloudTrail", "auditoría de administración")
+
+SecurityGroupGroup(sgApp, "SG ms-cupones")
+
+users --> apigw
+apigw --> alb
+alb --> taskA
+alb --> taskB
+taskA --> aurora : SQL (JPA)
+taskB --> aurora : SQL (JPA)
+taskA --> redis : RESP
+taskB --> redis : RESP
+taskA .[#1565C0].> cw : logs, métricas y trazas
+cw .[#1565C0].> ecs : alarma CPU/latencia → auto scaling
+apigw .[#B71C1C].> cognito : autenticación (JWT)
+alb .[#B71C1C].> sgApp : SG: solo 443 desde el ALB
+aurora .[#B71C1C].> kms : cifrado at-rest
+taskA .[#B71C1C].> secrets : credenciales sin hardcodear
+taskA .[#B71C1C].> iam : permisos mínimos
+
+legend right
+  |= Elemento |= Decisión (requisito) |
+  | Fargate 3→12 | RNF de escalabilidad: escala solo este servicio en el pico |
+  | ElastiCache | RNF de rendimiento: lecturas en milisegundos |
+  | BD propia | Aislamiento de datos por dominio (IE9/IE10) |
+  |<#B71C1C>|  Controles de seguridad (IE7) |
+  |<#1565C0]|  Puntos de monitoreo (IE8) |
+endlegend
+
+@enduml
