@@ -1,0 +1,6 @@
+cl/duoc/casoEjemplo/pagos/PagoServiceTest.class
+cl/duoc/casoEjemplo/pagos/OpenApiConfigTest.class
+cl/duoc/casoEjemplo/pagos/PagoControllerTest.class
+cl/duoc/casoEjemplo/pagos/cucumber/CucumberRunnerTest.class
+cl/duoc/casoEjemplo/pagos/cucumber/CucumberSpringConfiguration.class
+cl/duoc/casoEjemplo/pagos/cucumber/PagoSteps.class

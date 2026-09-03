@@ -1,0 +1,6 @@
+cl/duoc/casoEjemplo/pagos/model/Pago.class
+cl/duoc/casoEjemplo/pagos/config/OpenApiConfig.class
+cl/duoc/casoEjemplo/pagos/PagoApplication.class
+cl/duoc/casoEjemplo/pagos/controller/PagoController.class
+cl/duoc/casoEjemplo/pagos/repository/PagoRepository.class
+cl/duoc/casoEjemplo/pagos/service/PagoService.class

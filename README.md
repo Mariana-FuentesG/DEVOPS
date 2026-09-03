@@ -69,4 +69,4 @@ Elegimos **GitFlow** porque es el estándar más utilizado a nivel empresarial y
 Este modelo nos entrega beneficios clave:
 * La rama `develop` permite integrar características de ambos integrantes sin arriesgar la estabilidad de `main`.
 * La rama `hotfix/` facilita corregir errores urgentes en producción sin interrumpir el trabajo en desarrollo.
-* Garantiza una **trazabilidad clara** al separar explícitamente el código estable del código en integración, cumpliendo con las rúbricas de la asignatura.
+* Garantiza una **trazabilidad clara** al separar explícitamente el código estable del código en integración, cumpliendo con las rúbricas de la asignatura DevOps.
