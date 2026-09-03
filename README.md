@@ -62,7 +62,7 @@ mvn verify    # + verificación de cobertura JaCoCo (100% LINE, falla si baja)
 ```
 ## Modelo de ramificación
 
-**Modelo elegido:** GitFlow.
+**Modelo de ramificación elegido:** GitFlow.
 
 Elegimos **GitFlow** porque es el estándar más utilizado a nivel empresarial y el modelo más popular para el desarrollo de código. Además, **se adapta perfectamente al curso**, ya que cada evaluación (EP01, EP02, EP03) funciona como un hito estable.
 
@@ -70,3 +70,4 @@ Este modelo nos entrega beneficios clave:
 * La rama `develop` permite integrar características de ambos integrantes sin arriesgar la estabilidad de `main`.
 * La rama `hotfix/` facilita corregir errores urgentes en producción sin interrumpir el trabajo en desarrollo.
 * Garantiza una **trazabilidad clara** al separar explícitamente el código estable del código en integración, cumpliendo con las rúbricas de la asignatura DevOps.
+
