@@ -71,3 +71,32 @@ Este modelo nos entrega beneficios clave:
 * La rama `hotfix/` facilita corregir errores urgentes en producción sin interrumpir el trabajo en desarrollo.
 * Garantiza una **trazabilidad clara** al separar explícitamente el código estable del código en integración, cumpliendo con las rúbricas de la asignatura DevOps.
 
+## Convenciones y Buenas Prácticas del Equipo
+
+### Convención de Commits
+
+Formato estándar: **tipo(alcance): descripcion-corta** (Todo en minúsculas y sin tildes).
+
+* **feat**: Nueva funcionalidad. Ejemplo: `feat(ui): agregar pie de pagina`
+* **fix**: Corrección de bug. Ejemplo: `fix(home): corregir titulo`
+* **docs**: Documentación. Ejemplo: `docs: agregar changelog`
+* **chore**: Tareas / CI. Ejemplo: `chore(ci): agregar workflow hola mundo`
+
+### Naming de Ramas
+
+* Formato permitido: **feature/<feature-name>** y **hotfix/<feature-name>**
+* Reglas: Siempre en minúsculas y separadas por guiones.
+* Ejemplos: `feature/pagina-presentacion`, `hotfix/titulo-pagina`.
+
+### Flujo de Merge
+
+* **Vía Pull Request**: Features y hotfix siempre entran por PR. Prohibido hacer push directo a `main` o `develop`.
+* **Aprobación requerida**: Se necesita al menos 1 aprobación del compañero antes de fusionar.
+* **Limpieza**: Usar merge commit o squash, y eliminar la rama inmediatamente después de fusionar.
+
+### Estrategia de Revisión
+
+* **Asignación**: El autor abre el PR y asigna obligatoriamente a un revisor.
+* **Revisión activa**: El revisor comenta, aprueba o pide cambios. Nunca se fusiona un PR sin revisión previa.
+* **Validación técnica**: Antes de cada PR, el autor debe confirmar que `mvn test` pasa sin errores y revisar las diferencias (diff).
+* **Plantilla (Opcional)**: Uso de `PULL_REQUEST_TEMPLATE.md` para estandarizar la revisión en GitHub.
