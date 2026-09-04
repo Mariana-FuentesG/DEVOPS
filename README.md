@@ -100,3 +100,5 @@ Formato estándar: **tipo(alcance): descripcion-corta** (Todo en minúsculas y s
 * **Revisión activa**: El revisor comenta, aprueba o pide cambios. Nunca se fusiona un PR sin revisión previa.
 * **Validación técnica**: Antes de cada PR, el autor debe confirmar que `mvn test` pasa sin errores y revisar las diferencias (diff).
 * **Plantilla (Opcional)**: Uso de `PULL_REQUEST_TEMPLATE.md` para estandarizar la revisión en GitHub.
+
+[![Hola Mundo CI](https://github.com/Benjamin1275/DEVOPS/actions/workflows/hola-mundo.yml/badge.svg)](https://github.com/Benjamin1275/DEVOPS/actions/workflows/hola-mundo.yml)
