@@ -101,4 +101,4 @@ Formato estándar: **tipo(alcance): descripcion-corta** (Todo en minúsculas y s
 * **Validación técnica**: Antes de cada PR, el autor debe confirmar que `mvn test` pasa sin errores y revisar las diferencias (diff).
 * **Plantilla (Opcional)**: Uso de `PULL_REQUEST_TEMPLATE.md` para estandarizar la revisión en GitHub.
 
-[![Hola Mundo CI](https://github.com/Benjamin1275/DEVOPS/actions/workflows/hola-mundo.yml/badge.svg)](https://github.com/Benjamin1275/DEVOPS/actions/workflows/hola-mundo.yml)
+[![Hola Mundo CI](https://github.com/Benjamin1275/DEVOP/actions/workflows/hola-mundo.yml/badge.svg?branch=develop)](https://github.com/Benjamin1275/DEVOP/actions/workflows/hola-mundo.yml)
