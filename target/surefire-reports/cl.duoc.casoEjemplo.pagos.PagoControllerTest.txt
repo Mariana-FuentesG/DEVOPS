@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: cl.duoc.casoEjemplo.pagos.PagoControllerTest
+-------------------------------------------------------------------------------
+Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 12.53 s -- in cl.duoc.casoEjemplo.pagos.PagoControllerTest
