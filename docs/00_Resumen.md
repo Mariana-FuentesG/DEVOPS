@@ -19,7 +19,7 @@ El servicio atiende un único dominio de negocio y tiene una sola razón de camb
 | Componente | Tecnología |
 |---|---|
 | Framework | Spring Boot 3.3 |
-| Lenguaje | Java 21 |
+| Lenguaje | Java 25 |
 | Build | Maven |
 | Persistencia | Spring Data JPA + H2 (in-memory) |
 | Validación | Bean Validation (`jakarta.validation`) |

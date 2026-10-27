@@ -2,7 +2,7 @@
 
 ## Requisitos
 
-- Java 21, Maven 3.9 (build local)
+- Java 25, Maven 3.9 (build local)
 - Docker + Docker Compose (despliegue)
 
 ## Ejecución local
