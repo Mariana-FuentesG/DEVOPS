@@ -1,0 +1,117 @@
+name: CI/CD Pagos
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+permissions:
+  contents: read
+
+env:
+  IMAGE_NAME: duoc/casoejemplo-pagos
+  IMAGE_TAG: ${{ github.sha }}
+
+jobs:
+  test:
+    name: Pruebas y cobertura
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar código
+        uses: actions/checkout@v4
+
+      - name: Configurar Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "25"
+          cache: maven
+
+      - name: Ejecutar pruebas y cobertura
+        run: mvn -B verify
+
+      - name: Publicar reportes
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reportes-de-calidad
+          path: |
+            target/site/jacoco/
+            target/cucumber/
+            target/surefire-reports/
+
+  security:
+    name: Análisis de seguridad
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar código
+        uses: actions/checkout@v4
+
+      - name: Analizar dependencias con Snyk
+        uses: snyk/actions/maven@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --severity-threshold=high
+
+  build:
+    name: Construir imagen Docker
+    needs: [test, security]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar código
+        uses: actions/checkout@v4
+
+      - name: Construir imagen trazable
+        run: docker build --tag "${IMAGE_NAME}:${IMAGE_TAG}" .
+
+      - name: Verificar usuario no root
+        run: |
+          docker inspect --format='{{.Config.User}}' "${IMAGE_NAME}:${IMAGE_TAG}" | grep -Fx app
+
+  deploy:
+    name: Despliegue simulado
+    needs: [test, security, build]
+    runs-on: ubuntu-latest
+    env:
+      IMAGE_NAME: duoc/casoejemplo-pagos
+      IMAGE_TAG: ${{ github.sha }}
+    steps:
+      - name: Descargar código
+        uses: actions/checkout@v4
+
+      - name: Construir imagen para el stack
+        run: docker build --tag "${IMAGE_NAME}:${IMAGE_TAG}" .
+
+      - name: Inicializar Docker Swarm
+        run: docker swarm init
+
+      - name: Desplegar stack con dos réplicas
+        run: docker stack deploy --compose-file docker-compose.yml pagos
+
+      - name: Esperar réplicas disponibles
+        shell: bash
+        run: |
+          for attempt in {1..18}; do
+            replicas=$(docker service ls --filter name=pagos_pagos-svc --format '{{.Replicas}}')
+            echo "Réplicas: ${replicas}"
+            if [ "${replicas}" = "2/2" ]; then
+              exit 0
+            fi
+            sleep 5
+          done
+          docker service ps pagos_pagos-svc
+          exit 1
+
+      - name: Verificar servicio desplegado
+        run: curl --fail --retry 10 --retry-delay 5 http://localhost:8080/
+
+      - name: Mostrar trazabilidad
+        run: |
+          docker service ls
+          docker service ps pagos_pagos-svc
+
+      - name: Detener entorno simulado
+        if: always()
+        run: docker stack rm pagos

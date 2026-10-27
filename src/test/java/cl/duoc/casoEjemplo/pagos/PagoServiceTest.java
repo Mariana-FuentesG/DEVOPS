@@ -2,12 +2,14 @@ package cl.duoc.casoEjemplo.pagos;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.lang.NonNull;
 import cl.duoc.casoEjemplo.pagos.model.Pago;
 import cl.duoc.casoEjemplo.pagos.repository.PagoRepository;
 import cl.duoc.casoEjemplo.pagos.service.PagoService;
@@ -18,6 +20,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
+@SuppressWarnings("null")
 class PagoServiceTest {
 
     @Mock
@@ -26,6 +29,7 @@ class PagoServiceTest {
     @InjectMocks
     private PagoService service;
 
+    @NonNull
     private Pago recurso() {
         Pago r = new Pago();
         r.setId(1L);
@@ -56,17 +60,17 @@ class PagoServiceTest {
 
     @Test
     void crearGuarda() {
-        when(repository.save(any())).thenReturn(recurso());
-        assertThat(service.create(recurso()).getNombre()).isEqualTo("Demo");
+        when(repository.save(any(Pago.class))).thenReturn(Objects.requireNonNull(recurso()));
+        assertThat(service.create(Objects.requireNonNull(recurso())).getNombre()).isEqualTo("Demo");
     }
 
-@Test
+    @Test
         void actualizarExistente() {
             Pago datos = recurso();
             datos.setNombre("Actualizado");
             when(repository.findById(1L)).thenReturn(Optional.of(recurso()));
-            when(repository.save(any())).thenAnswer(inv -> inv.getArgument(0));
-            Optional<Pago> resultado = service.update(1L, datos);
+            when(repository.save(any(Pago.class))).thenAnswer(inv -> inv.getArgument(0));
+            Optional<Pago> resultado = service.update(1L, Objects.requireNonNull(datos));
             assertThat(resultado).isPresent();
             assertThat(resultado.get().getNombre()).isEqualTo("Actualizado");
         }
@@ -74,14 +78,14 @@ class PagoServiceTest {
     @Test
     void actualizarInexistente() {
         when(repository.findById(9L)).thenReturn(Optional.empty());
-        assertThat(service.update(9L, recurso())).isEmpty();
+        assertThat(service.update(9L, Objects.requireNonNull(recurso()))).isEmpty();
     }
 
     @Test
     void eliminarExistente() {
         when(repository.findById(1L)).thenReturn(Optional.of(recurso()));
         assertThat(service.delete(1L)).isTrue();
-        verify(repository).delete(any());
+        verify(repository).delete(any(Pago.class));
     }
 
     @Test

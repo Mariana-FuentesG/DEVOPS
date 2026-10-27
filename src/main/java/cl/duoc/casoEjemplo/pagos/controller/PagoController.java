@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,25 +32,25 @@ public class PagoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Pago> obtener(@PathVariable Long id) {
+    public ResponseEntity<Pago> obtener(@NonNull @PathVariable Long id) {
         return service.findById(id).map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<Pago> crear(@Valid @RequestBody Pago recurso) {
+    public ResponseEntity<Pago> crear(@NonNull @Valid @RequestBody Pago recurso) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.create(recurso));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Pago> actualizar(@PathVariable Long id,
-            @Valid @RequestBody Pago datos) {
+    public ResponseEntity<Pago> actualizar(@NonNull @PathVariable Long id,
+            @NonNull @Valid @RequestBody Pago datos) {
         return service.update(id, datos).map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> eliminar(@PathVariable Long id) {
+    public ResponseEntity<Void> eliminar(@NonNull @PathVariable Long id) {
         return service.delete(id) ? ResponseEntity.noContent().build()
                 : ResponseEntity.notFound().build();
     }

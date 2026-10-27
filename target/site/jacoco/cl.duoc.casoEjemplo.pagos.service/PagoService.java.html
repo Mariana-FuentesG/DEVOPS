@@ -2,6 +2,7 @@
 
 import java.util.List;
 import java.util.Optional;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import cl.duoc.casoEjemplo.pagos.model.Pago;
 import cl.duoc.casoEjemplo.pagos.repository.PagoRepository;
@@ -11,37 +12,38 @@ public class PagoService {
 
     private final PagoRepository repository;
 
-<span class="fc" id="L14">    public PagoService(PagoRepository repository) {</span>
-<span class="fc" id="L15">        this.repository = repository;</span>
-<span class="fc" id="L16">    }</span>
+<span class="fc" id="L15">    public PagoService(PagoRepository repository) {</span>
+<span class="fc" id="L16">        this.repository = repository;</span>
+<span class="fc" id="L17">    }</span>
 
     public List&lt;Pago&gt; findAll() {
-<span class="fc" id="L19">        return repository.findAll();</span>
+<span class="fc" id="L20">        return repository.findAll();</span>
     }
 
-    public Optional&lt;Pago&gt; findById(Long id) {
-<span class="fc" id="L23">        return repository.findById(id);</span>
+    public Optional&lt;Pago&gt; findById(@NonNull Long id) {
+<span class="fc" id="L24">        return repository.findById(id);</span>
     }
 
-    public Pago create(Pago recurso) {
-<span class="fc" id="L27">        return repository.save(recurso);</span>
+    @NonNull
+    public Pago create(@NonNull Pago recurso) {
+<span class="fc" id="L29">        return repository.save(recurso);</span>
     }
 
-    public Optional&lt;Pago&gt; update(Long id, Pago datos) {
-<span class="fc" id="L31">        return repository.findById(id).map(existente -&gt; {</span>
-<span class="fc" id="L32">            existente.setNombre(datos.getNombre());</span>
-<span class="fc" id="L33">            existente.setOrden(datos.getOrden());</span>
-<span class="fc" id="L34">            existente.setMonto(datos.getMonto());</span>
-<span class="fc" id="L35">            existente.setEstado(datos.getEstado());</span>
-<span class="fc" id="L36">            return repository.save(existente);</span>
+    public Optional&lt;Pago&gt; update(@NonNull Long id, @NonNull Pago datos) {
+<span class="fc" id="L33">        return repository.findById(id).map((@NonNull Pago existente) -&gt; {</span>
+<span class="fc" id="L34">            existente.setNombre(datos.getNombre());</span>
+<span class="fc" id="L35">            existente.setOrden(datos.getOrden());</span>
+<span class="fc" id="L36">            existente.setMonto(datos.getMonto());</span>
+<span class="fc" id="L37">            existente.setEstado(datos.getEstado());</span>
+<span class="fc" id="L38">            return repository.save(existente);</span>
         });
     }
 
-    public boolean delete(Long id) {
-<span class="fc" id="L41">        return repository.findById(id).map(existente -&gt; {</span>
-<span class="fc" id="L42">            repository.delete(existente);</span>
-<span class="fc" id="L43">            return true;</span>
-<span class="fc" id="L44">        }).orElse(false);</span>
+    public boolean delete(@NonNull Long id) {
+<span class="fc" id="L43">        return repository.findById(id).map((@NonNull Pago existente) -&gt; {</span>
+<span class="fc" id="L44">            repository.delete(existente);</span>
+<span class="fc" id="L45">            return true;</span>
+<span class="fc" id="L46">        }).orElse(false);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.16.202610240946</span></div></body></html>
