@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import cl.duoc.casoEjemplo.pagos.model.Pago;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class PagoSteps {
 
@@ -61,7 +62,9 @@ public class PagoSteps {
         ResponseEntity<Pago> creado = rest.postForEntity(
                 url(), body(nombre), Pago.class);
         assertThat(creado.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-        id = creado.getBody().getId();
+        Pago pagoCreado = creado.getBody();
+        assertNotNull(pagoCreado);
+        id = pagoCreado.getId();
     }
 
     @When("consulto el {string} recién creado")
@@ -71,8 +74,12 @@ public class PagoSteps {
 
     @Then("el recurso tiene nombre {string} y código {int}")
     public void recursoConNombre(String nombre, int codigo) {
-        assertThat(respuesta.getStatusCode().value()).isEqualTo(codigo);
-        assertThat(respuesta.getBody().getNombre()).isEqualTo(nombre);
+        ResponseEntity<Pago> response = respuesta;
+        assertNotNull(response);
+        assertThat(response.getStatusCode().value()).isEqualTo(codigo);
+        Pago pago = response.getBody();
+        assertNotNull(pago);
+        assertThat(pago.getNombre()).isEqualTo(nombre);
     }
 
     @When("actualizo el {string} con nombre {string}")
@@ -82,8 +89,12 @@ public class PagoSteps {
 
     @Then("el recurso queda con nombre {string} y código {int}")
     public void recursoActualizado(String nombre, int codigo) {
-        assertThat(respuesta.getStatusCode().value()).isEqualTo(codigo);
-        assertThat(respuesta.getBody().getNombre()).isEqualTo(nombre);
+        ResponseEntity<Pago> response = respuesta;
+        assertNotNull(response);
+        assertThat(response.getStatusCode().value()).isEqualTo(codigo);
+        Pago pago = response.getBody();
+        assertNotNull(pago);
+        assertThat(pago.getNombre()).isEqualTo(nombre);
     }
 
     @When("elimino el {string}")
@@ -93,7 +104,9 @@ public class PagoSteps {
 
     @Then("la eliminación responde con código {int}")
     public void eliminarCodigo(int codigo) {
-        assertThat(respuestaVoid.getStatusCode().value()).isEqualTo(codigo);
+        ResponseEntity<Void> response = respuestaVoid;
+        assertNotNull(response);
+        assertThat(response.getStatusCode().value()).isEqualTo(codigo);
     }
 
     @Then("al consultar el {string} eliminado responde {int}")

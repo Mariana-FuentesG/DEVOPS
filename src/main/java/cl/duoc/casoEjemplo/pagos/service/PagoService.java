@@ -2,6 +2,7 @@ package cl.duoc.casoEjemplo.pagos.service;
 
 import java.util.List;
 import java.util.Optional;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import cl.duoc.casoEjemplo.pagos.model.Pago;
 import cl.duoc.casoEjemplo.pagos.repository.PagoRepository;
@@ -19,16 +20,17 @@ public class PagoService {
         return repository.findAll();
     }
 
-    public Optional<Pago> findById(Long id) {
+    public Optional<Pago> findById(@NonNull Long id) {
         return repository.findById(id);
     }
 
-    public Pago create(Pago recurso) {
+    @NonNull
+    public Pago create(@NonNull Pago recurso) {
         return repository.save(recurso);
     }
 
-    public Optional<Pago> update(Long id, Pago datos) {
-        return repository.findById(id).map(existente -> {
+    public Optional<Pago> update(@NonNull Long id, @NonNull Pago datos) {
+        return repository.findById(id).map((@NonNull Pago existente) -> {
             existente.setNombre(datos.getNombre());
             existente.setOrden(datos.getOrden());
             existente.setMonto(datos.getMonto());
@@ -37,8 +39,8 @@ public class PagoService {
         });
     }
 
-    public boolean delete(Long id) {
-        return repository.findById(id).map(existente -> {
+    public boolean delete(@NonNull Long id) {
+        return repository.findById(id).map((@NonNull Pago existente) -> {
             repository.delete(existente);
             return true;
         }).orElse(false);

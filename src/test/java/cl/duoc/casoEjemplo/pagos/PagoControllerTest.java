@@ -3,13 +3,14 @@ package cl.duoc.casoEjemplo.pagos;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import org.springframework.lang.NonNull;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import cl.duoc.casoEjemplo.pagos.model.Pago;
 import cl.duoc.casoEjemplo.pagos.service.PagoService;
@@ -25,6 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@SuppressWarnings("null")
 class PagoControllerTest {
 
     @Autowired
@@ -33,9 +35,10 @@ class PagoControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @MockBean
+    @MockitoBean
     private PagoService service;
 
+    @NonNull
     private Pago recurso(Long id) {
         Pago r = new Pago();
         r.setId(id);
@@ -46,8 +49,9 @@ class PagoControllerTest {
         return r;
     }
 
+    @NonNull
     private String body() throws Exception {
-        return objectMapper.writeValueAsString(recurso(null));
+        return Objects.requireNonNull(objectMapper.writeValueAsString(recurso(null)));
     }
 
     @Test
@@ -75,9 +79,9 @@ class PagoControllerTest {
 
     @Test
     void crearValidoDevuelve201() throws Exception {
-        when(service.create(any())).thenReturn(recurso(1L));
+        when(service.create(any(Pago.class))).thenReturn(Objects.requireNonNull(recurso(1L)));
         mockMvc.perform(post("/api/pagos")
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType("application/json")
                 .content(body()))
             .andExpect(status().isCreated())
             .andExpect(jsonPath("$.id").value(1));
@@ -86,7 +90,7 @@ class PagoControllerTest {
     @Test
     void crearInvalidoDevuelve400() throws Exception {
         mockMvc.perform(post("/api/pagos")
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType("application/json")
                 .content("{\"nombre\":\"\"}"))
             .andExpect(status().isBadRequest());
     }
@@ -95,9 +99,10 @@ class PagoControllerTest {
     void actualizarExistenteDevuelve200() throws Exception {
         Pago actualizado = recurso(1L);
         actualizado.setNombre("Actualizado");
-        when(service.update(any(), any())).thenReturn(Optional.of(actualizado));
+        when(service.update(any(Long.class), any(Pago.class)))
+                .thenReturn(Optional.of(Objects.requireNonNull(actualizado)));
         mockMvc.perform(put("/api/pagos/1")
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType("application/json")
                 .content(body()))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.nombre").value("Actualizado"));
@@ -105,9 +110,9 @@ class PagoControllerTest {
 
     @Test
     void actualizarInexistenteDevuelve404() throws Exception {
-        when(service.update(any(), any())).thenReturn(Optional.empty());
+        when(service.update(any(Long.class), any(Pago.class))).thenReturn(Optional.empty());
         mockMvc.perform(put("/api/pagos/1")
-                .contentType(MediaType.APPLICATION_JSON)
+                .contentType("application/json")
                 .content(body()))
             .andExpect(status().isNotFound());
     }

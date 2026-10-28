@@ -26,3 +26,10 @@ mvn verify -q               # además verifica cobertura JaCoCo (100% LINE, frac
 open target/site/jacoco/index.html
 open target/cucumber/cucumber.html   # reporte Cucumber
 ```
+
+## Ejecución en CI
+
+El job `test` del workflow `.github/workflows/pipeline.yml` ejecuta
+`mvn -B verify`. Una falla de pruebas o de la regla de cobertura detiene el
+pipeline. Los reportes de JaCoCo, Cucumber y Surefire se guardan como artefacto
+de la ejecución para facilitar la revisión.

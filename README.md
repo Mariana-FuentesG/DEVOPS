@@ -1,104 +1,160 @@
-# Pagos — Microservicio de riesgo pagos
+# Pagos — Microservicio de TicketWave
 
-Microservicio correspondiente al **caso casoEjemplo — TicketWave** (Venta y control de acceso de entradas para eventos en vivo) de la Evaluación Parcial N°1.
+Microservicio REST para administrar pagos del caso TicketWave. La aplicación
+usa Spring Boot, Java 25, Maven, Spring Data JPA y una base H2 en memoria.
 
-| | |
+## Tecnologías
+
+| Componente | Tecnología |
 |---|---|
-| Stack | Spring Boot 3.3 · Java 21 · Maven · Spring Data JPA · H2 · springdoc-openapi |
-| Calidad | JaCoCo cobertura LINE 100% · Cucumber (BDD) alineado a endpoints REST |
-| Entrega | Docker / Docker Compose |
+| Aplicación | Spring Boot 3.5.0 |
+| Lenguaje | Java 25 |
+| Persistencia | Spring Data JPA + H2 |
+| Documentación | springdoc OpenAPI, Swagger UI y ReDoc |
+| Pruebas | JUnit, Mockito, MockMvc y Cucumber |
+| Cobertura | JaCoCo con mínimo de 100% de líneas |
+| Entrega | Docker, Docker Compose y GitHub Actions |
 
-## Responsabilidad (SRP)
+## Ejecución local
 
-administra los datos y la lógica del dominio de Pagos del caso casoEjemplo (TicketWave). Su base de datos es una **H2 en memoria** (un solo microservicio por base), cumpliendo aislamiento de datos por dominio.
-
-## Página de presentación
-
-Al ejecutar el servicio, `http://localhost:8080/` muestra la página de presentación del microservicio con documentación y enlaces a:
-
-- **Swagger UI**: `/swagger-ui/index.html`
-- **OpenAPI (yaml)**: `/v3/api-docs.yaml`
-- **ReDoc**: `/redoc.html`
-- **H2 Console**: `/h2-console`
-
-## Endpoints
-
-| Método | Ruta | Descripción |
-|--------|------|-------------|
-| GET | `/api/pagos` | Lista todos los recursos |
-| GET | `/api/pagos/{id}` | Obtiene un recurso por id |
-| POST | `/api/pagos` | Crea un recurso |
-| PUT | `/api/pagos/{id}` | Actualiza un recurso |
-| DELETE | `/api/pagos/{id}` | Elimina un recurso |
-
-## Documentación del proyecto
-
-La documentación completa está en la carpeta [`docs/`](docs/):
-
-- [`docs/00_Resumen.md`](docs/00_Resumen.md) — propósito, responsabilidad y tecnologías
-- [`docs/01_Arquitectura.md`](docs/01_Arquitectura.md) — componentes, arquitectura y patrones
-- [`docs/02_API.md`](docs/02_API.md) — contrato REST y ejemplos curl
-- [`docs/03_Pruebas.md`](docs/03_Pruebas.md) — tests unitarios, cobertura y Cucumber
-- [`docs/04_Despliegue.md`](docs/04_Despliegue.md) — Docker, Docker Compose e integración
-
-## Cómo ejecutar locmente
+Requisitos: JDK 25, Maven 3.9 o superior y, para contenedores, Docker Compose.
 
 ```bash
 mvn spring-boot:run
 ```
 
-## Cómo ejecutar con Docker
+La aplicación queda disponible en `http://localhost:8080`. El puerto puede
+cambiarse con `PORT`.
+
+## API
+
+| Método | Ruta | Resultado |
+|---|---|---|
+| GET | `/api/pagos` | Lista pagos |
+| GET | `/api/pagos/{id}` | Obtiene un pago o responde 404 |
+| POST | `/api/pagos` | Crea un pago y responde 201 |
+| PUT | `/api/pagos/{id}` | Actualiza un pago |
+| DELETE | `/api/pagos/{id}` | Elimina un pago y responde 204 |
+
+También están disponibles:
+
+- Página de presentación: `/`
+- Swagger UI: `/swagger-ui/index.html`
+- OpenAPI YAML: `/v3/api-docs.yaml`
+- ReDoc: `/redoc.html`
+- Consola H2: `/h2-console`
+
+## Evidencias de la EP2
+
+### IE1 — Contenedores
+
+El [Dockerfile](Dockerfile) utiliza dos etapas: Maven para compilar y una
+imagen JRE separada para ejecutar. La imagen final:
+
+- No incluye el código fuente ni las dependencias de Maven.
+- Ejecuta con el usuario no privilegiado `app`.
+- Expone un `HEALTHCHECK` contra la página raíz.
+- Usa `.dockerignore` para no enviar artefactos, documentación ni metadatos de
+  Git al contexto de construcción.
+
+Construcción y ejecución local:
 
 ```bash
-docker compose up --build
-# http://localhost:8080
+docker build -t duoc/casoejemplo-pagos:local .
+docker run --rm -p 8080:8080 duoc/casoejemplo-pagos:local
 ```
 
-## Cómo ejecutar las pruebas
+### IE2 — Pruebas automatizadas
+
+El job `test` ejecuta `mvn verify`, por lo que corre las pruebas unitarias,
+MockMvc, Cucumber y la regla de cobertura JaCoCo. El pipeline se detiene si una
+prueba falla o si la cobertura queda bajo el 100% configurado en Maven.
 
 ```bash
-mvn test      # unit tests + Cucumber
-mvn verify    # + verificación de cobertura JaCoCo (100% LINE, falla si baja)
+mvn test
+mvn verify
 ```
-## Modelo de ramificación
 
-**Modelo de ramificación elegido:** GitFlow.
+Los reportes se publican como artefacto de GitHub Actions, incluso cuando una
+prueba falla, para facilitar la revisión.
 
-Elegimos **GitFlow** porque es el estándar más utilizado a nivel empresarial y el modelo más popular para el desarrollo de código. Además, **se adapta perfectamente al curso**, ya que cada evaluación (EP01, EP02, EP03) funciona como un hito estable.
+### IE3 — Seguridad y escalabilidad
 
-Este modelo nos entrega beneficios clave:
-* La rama `develop` permite integrar características de ambos integrantes sin arriesgar la estabilidad de `main`.
-* La rama `hotfix/` facilita corregir errores urgentes en producción sin interrumpir el trabajo en desarrollo.
-* Garantiza una **trazabilidad clara** al separar explícitamente el código estable del código en integración, cumpliendo con las rúbricas de la asignatura DevOps.
+- `.github/dependabot.yml` revisa semanalmente las dependencias Maven y las
+  acciones de GitHub.
+- El job `security` ejecuta Snyk con `--severity-threshold=high`. Un hallazgo
+  alto o crítico hace fallar el job y bloquea los jobs siguientes.
+- El secreto requerido es `SNYK_TOKEN`, configurado en los secretos del
+  repositorio.
+- Compose define dos réplicas como referencia de escalabilidad, límites de
+  CPU/memoria y reinicio automático.
 
-## Convenciones y Buenas Prácticas del Equipo
+La ejecución de Snyk no usa credenciales en el código. Las actualizaciones de
+Dependabot deben revisarse antes de fusionarse.
 
-### Convención de Commits
+### IE4 — Despliegue y trazabilidad
 
-Formato estándar: **tipo(alcance): descripcion-corta** (Todo en minúsculas y sin tildes).
+El workflow [pipeline.yml](.github/workflows/pipeline.yml) ejecuta los jobs en
+este orden:
 
-* **feat**: Nueva funcionalidad. Ejemplo: `feat(ui): agregar pie de pagina`
-* **fix**: Corrección de bug. Ejemplo: `fix(home): corregir titulo`
-* **docs**: Documentación. Ejemplo: `docs: agregar changelog`
-* **chore**: Tareas / CI. Ejemplo: `chore(ci): agregar workflow hola mundo`
+```text
+test + security -> build -> deploy
+```
 
-### Naming de Ramas
+La imagen se etiqueta con `${GITHUB_SHA}`, de modo que cada ejecución queda
+vinculada al commit que la originó. El job `deploy` levanta Docker Compose en el
+runner, espera la disponibilidad del servicio, verifica `http://localhost:8080/`
+y finalmente apaga el entorno simulado.
 
-* Formato permitido: **feature/<feature-name>** y **hotfix/<feature-name>**
-* Reglas: Siempre en minúsculas y separadas por guiones.
-* Ejemplos: `feature/pagina-presentacion`, `hotfix/titulo-pagina`.
+### IE5 — Orquestación
 
-### Flujo de Merge
+El [docker-compose.yml](docker-compose.yml) define:
 
-* **Vía Pull Request**: Features y hotfix siempre entran por PR. Prohibido hacer push directo a `main` o `develop`.
-* **Aprobación requerida**: Se necesita al menos 1 aprobación del compañero antes de fusionar.
-* **Limpieza**: Usar merge commit o squash, y eliminar la rama inmediatamente después de fusionar.
+- Healthcheck del servicio.
+- Reinicio automático con `unless-stopped`.
+- Dos réplicas declaradas y límites de CPU/memoria.
+- Tag configurable mediante `IMAGE_TAG`.
+- Puerto configurable mediante `PORT`.
 
-### Estrategia de Revisión
+```bash
+IMAGE_TAG=local PORT=8080 docker compose up --build
+docker compose down
+```
 
-* **Asignación**: El autor abre el PR y asigna obligatoriamente a un revisor.
-* **Revisión activa**: El revisor comenta, aprueba o pide cambios. Nunca se fusiona un PR sin revisión previa.
-* **Validación técnica**: Antes de cada PR, el autor debe confirmar que `mvn test` pasa sin errores y revisar las diferencias (diff).
-* **Plantilla (Opcional)**: Uso de `PULL_REQUEST_TEMPLATE.md` para estandarizar la revisión en GitHub.
+Para demostrar dos réplicas reales detrás del mismo puerto, usa Docker Swarm:
 
-[![Hola Mundo CI](https://github.com/Mariana-FuentesG/DEVOPS/actions/workflows/hola-mundo.yml/badge.svg?branch=develop)](https://github.com/Mariana-FuentesG/DEVOPS/actions/workflows/hola-mundo.yml)
+```bash
+docker swarm init
+docker stack deploy --compose-file docker-compose.yml pagos
+docker service ls
+docker service ps pagos_pagos-svc
+curl --fail http://localhost:8080/
+docker stack rm pagos
+```
+
+El workflow realiza estos mismos pasos automáticamente. `deploy.replicas`,
+`resources`, `restart_policy` y `update_config` se aplican al desplegar como
+stack. En Compose local se mantiene una instancia para evitar conflictos al
+publicar el puerto 8080.
+
+## Documentación adicional
+
+- [Resumen](docs/00_Resumen.md)
+- [Arquitectura](docs/01_Arquitectura.md)
+- [API](docs/02_API.md)
+- [Pruebas](docs/03_Pruebas.md)
+- [Despliegue](docs/04_Despliegue.md)
+
+## Uso de inteligencia artificial
+
+Se utilizó un asistente de IA como apoyo para revisar los requisitos de la EP2,
+proponer la estructura del pipeline, detectar brechas en Docker/Compose y
+mejorar la documentación. El equipo debe revisar y validar cada cambio antes
+de entregarlo. Las reflexiones individuales y las conclusiones personales
+deben ser redactadas por cada integrante sin apoyo de IA.
+
+## Entrega y revisión
+
+El equipo debe trabajar mediante ramas y Pull Requests, revisar el resultado
+del pipeline en la pestaña Actions y entregar el enlace del repositorio según
+las instrucciones de la asignatura.
