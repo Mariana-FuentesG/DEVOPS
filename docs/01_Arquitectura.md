@@ -1,14 +1,14 @@
-# Cupones — Arquitectura del microservicio
+# Pagos — Arquitectura del microservicio
 
 ## Componentes
 
 | Componente | Rol |
 |---|---|
-| `CuponApplication` | Punto de entrada Spring Boot |
-| `controller/CuponController.java` | API REST expuesta en `/api/cupones` |
-| `service/CuponService.java` | Lógica de negocio y transacciones |
-| `repository/CuponRepository.java` | Acceso JPA a H2 |
-| `model/Cupon.java` | Entidad persistida en tablas H2 |
+| `PagoApplication` | Punto de entrada Spring Boot |
+| `controller/PagoController.java` | API REST expuesta en `/api/pagos` |
+| `service/PagoService.java` | Lógica de negocio y transacciones |
+| `repository/PagoRepository.java` | Acceso JPA a H2 |
+| `model/Pago.java` | Entidad persistida en tablas H2 |
 | `config/OpenApiConfig.java` | Metadata OpenAPI del servicio |
 | `static/index.html` | Página de presentación en `/` |
 | `static/redoc.html` | Referencia ReDoc de la API |
@@ -32,4 +32,4 @@ En el diagrama general del caso este microservicio participa de:
 
 ## Diagrama de la API (flujo)
 
-`Cliente/Sistema → API Gateway → CuponController → CuponService → CuponRepository → H2`
+`Cliente/Sistema → API Gateway → PagoController → PagoService → PagoRepository → H2`

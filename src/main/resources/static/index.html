@@ -28,11 +28,12 @@
   footer { max-width:960px; margin:32px auto 24px; padding:0 24px; color:var(--muted); font-size:12px; }
 </style>
 </head>
+<footer>Microservicio pagos · EP01 · Gestionado con GitFlow v1.0.0</footer>
 <body>
 <header>
-  <div class="tag">Caso caso05 · FoodGo · EP01</div>
-  <h1>Cupones</h1>
-  <p>Microservicio <strong>cupones</strong> · Base path <code>/api/cupones</code> · HTTP/JSON · H2 in-memory</p>
+  <div class="tag">Caso casoEjemplo · TicketWave · EP01</div>
+  <h1>Pagos</h1>
+  <p>Microservicio <strong>pagos</strong> · Base path <code>/api/pagos</code> · HTTP/JSON · H2 in-memory</p>
 </header>
 <main>
   <h2>Documentación interactiva</h2>
@@ -52,29 +53,29 @@
   </div>
 
   <h2>Responsabilidad del servicio (SRP)</h2>
-  <p>Cupones es el microservicio responsable de administra los datos y la lógica del dominio de Cupones del caso caso05 (FoodGo). dentro del caso caso05 (FoodGo). Sus datos se persisten en una base de datos H2 en memoria (una por microservicio) y queda aislado del resto de la solución para garantizar bajo acoplamiento y alta cohesión.</p>
+  <p>Pagos es el microservicio responsable de administra los datos y la lógica del dominio de Pagos del caso casoEjemplo (TicketWave). dentro del caso casoEjemplo (TicketWave). Sus datos se persisten en una base de datos H2 en memoria (una por microservicio) y queda aislado del resto de la solución para garantizar bajo acoplamiento y alta cohesión.</p>
 
   <h2>Endpoints</h2>
   <table>
     <thead><tr><th>Método</th><th>Ruta</th><th>Descripción</th></tr></thead>
     <tbody>
-      <tr><td>GET</td><td>/api/cupones</td><td>Lista todos los recursos</td></tr>
-      <tr><td>GET</td><td>/api/cupones/{id}</td><td>Obtiene un recurso por id</td></tr>
-      <tr><td>POST</td><td>/api/cupones</td><td>Crea un recurso</td></tr>
-      <tr><td>PUT</td><td>/api/cupones/{id}</td><td>Actualiza un recurso</td></tr>
-      <tr><td>DELETE</td><td>/api/cupones/{id}</td><td>Elimina un recurso</td></tr>
+      <tr><td>GET</td><td>/api/pagos</td><td>Lista todos los recursos</td></tr>
+      <tr><td>GET</td><td>/api/pagos/{id}</td><td>Obtiene un recurso por id</td></tr>
+      <tr><td>POST</td><td>/api/pagos</td><td>Crea un recurso</td></tr>
+      <tr><td>PUT</td><td>/api/pagos/{id}</td><td>Actualiza un recurso</td></tr>
+      <tr><td>DELETE</td><td>/api/pagos/{id}</td><td>Elimina un recurso</td></tr>
     </tbody>
   </table>
 
   <h2>Ejemplo rápido</h2>
-<pre>curl -X POST http://localhost:8080/api/cupones \
+<pre>curl -X POST http://localhost:8080/api/pagos \
   -H "Content-Type: application/json" \
   -d '{"nombre":"Crear recurso"}'
-curl http://localhost:8080/api/cupones</pre>
+curl http://localhost:8080/api/pagos</pre>
 
   <h2>Tecnologías</h2>
   <p>Spring Boot 3.3 · Java 21 · Maven · Spring Data JPA · H2 · Bean Validation · springdoc-openapi (Swagger UI + ReDoc) · JaCoCo (cobertura 100% LINE) · Cucumber (BDD vs endpoints) · Docker / Docker Compose.</p>
 </main>
-<footer>Generado para la Evaluación Parcial N°1 · caso caso05 — FoodGo.</footer>
+<footer>Microservicio pagos · EP01 · Gestionado con GitFlow v1.0.0</footer>
 </body>
 </html>

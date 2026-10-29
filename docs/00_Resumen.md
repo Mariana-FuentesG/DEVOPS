@@ -1,14 +1,14 @@
-# Cupones — Resumen del microservicio
+# Pagos — Resumen del microservicio
 
 ## Propósito
 
-administra los datos y la lógica del dominio de Cupones del caso caso05 (FoodGo).
+administra los datos y la lógica del dominio de Pagos del caso casoEjemplo (TicketWave).
 
 ## Contexto
 
-- **Caso**: caso05 — FoodGo (Delivery de comida)
-- **Microservicio**: cupones
-- **Base path**: `/api/cupones`
+- **Caso**: casoEjemplo — TicketWave (Venta y control de acceso de entradas para eventos en vivo)
+- **Microservicio**: pagos
+- **Base path**: `/api/pagos`
 
 ## Responsabilidad única (SRP)
 
@@ -18,8 +18,8 @@ El servicio atiende un único dominio de negocio y tiene una sola razón de camb
 
 | Componente | Tecnología |
 |---|---|
-| Framework | Spring Boot 3.3 |
-| Lenguaje | Java 21 |
+| Framework | Spring Boot 3.5.0 |
+| Lenguaje | Java 25 |
 | Build | Maven |
 | Persistencia | Spring Data JPA + H2 (in-memory) |
 | Validación | Bean Validation (`jakarta.validation`) |

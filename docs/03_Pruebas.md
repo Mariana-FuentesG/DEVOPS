@@ -1,17 +1,17 @@
-# Cupones — Estrategia de pruebas
+# Pagos — Estrategia de pruebas
 
 ## Pruebas unitarias (cobertura JaCoCo 100% LINE)
 
-- **`CuponServiceTest`** — prueba de servicio con Mockito: listar, obtener, crear, actualizar (presente y ausente) y eliminar (presente y ausente).
-- **`CuponControllerTest`** — prueba del contrato HTTP con `MockMvc`: 200/404/201/201·400/204 en todas las ramas.
+- **`PagoServiceTest`** — prueba de servicio con Mockito: listar, obtener, crear, actualizar (presente y ausente) y eliminar (presente y ausente).
+- **`PagoControllerTest`** — prueba del contrato HTTP con `MockMvc`: 200/404/201/201·400/204 en todas las ramas.
 - **`OpenApiConfigTest`** — verifica la metadata OpenAPI.
 
 ## BDD con Cucumber (alineado a endpoints)
 
-- **Features**: `src/test/resources/cucumber/cupones.feature`
+- **Features**: `src/test/resources/cucumber/pagos.feature`
 - **Runner**: `cucumber/CucumberRunnerTest` (JUnit Platform)
 - **Contexto**: `cucumber/CucumberSpringConfiguration` (arranca el servidor en puerto aleatorio)
-- **Steps**: `cucumber/CuponSteps` — llama a los endpoints reales vía `TestRestTemplate`
+- **Steps**: `cucumber/PagoSteps` — llama a los endpoints reales vía `TestRestTemplate`
 
 Escenarios:
 
@@ -26,3 +26,10 @@ mvn verify -q               # además verifica cobertura JaCoCo (100% LINE, frac
 open target/site/jacoco/index.html
 open target/cucumber/cucumber.html   # reporte Cucumber
 ```
+
+## Ejecución en CI
+
+El job `test` del workflow `.github/workflows/pipeline.yml` ejecuta
+`mvn -B verify`. Una falla de pruebas o de la regla de cobertura detiene el
+pipeline. Los reportes de JaCoCo, Cucumber y Surefire se guardan como artefacto
+de la ejecución para facilitar la revisión.

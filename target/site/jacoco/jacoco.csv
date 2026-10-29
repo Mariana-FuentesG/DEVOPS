@@ -1,0 +1,5 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+Pagos | pagos,cl.duoc.casoEjemplo.pagos.model,Pago,0,38,0,0,0,13,0,11,0,11
+Pagos | pagos,cl.duoc.casoEjemplo.pagos.controller,PagoController,0,53,0,2,0,11,0,7,0,6
+Pagos | pagos,cl.duoc.casoEjemplo.pagos.config,OpenApiConfig,0,17,0,0,0,6,0,2,0,2
+Pagos | pagos,cl.duoc.casoEjemplo.pagos.service,PagoService,0,72,0,0,0,16,0,8,0,8
