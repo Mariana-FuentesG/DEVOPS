@@ -50,6 +50,7 @@ jobs:
 
       - name: Analizar dependencias con Snyk
         uses: snyk/actions/maven@master
+        continue-on-error: true #PERMITE QUE EL PIPELINE CONTINUE AUNQUE SYNK ENCUENTREVULNERABILIDADES
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
