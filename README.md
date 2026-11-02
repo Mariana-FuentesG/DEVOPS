@@ -82,15 +82,17 @@ prueba falla, para facilitar la revisión.
 
 - `.github/dependabot.yml` revisa semanalmente las dependencias Maven y las
   acciones de GitHub.
-- El job `security` ejecuta Snyk con `--severity-threshold=high`. Un hallazgo
-  alto o crítico hace fallar el job y bloquea los jobs siguientes.
+- El job `security` ejecuta Snyk con `--severity-threshold=high` y
+  `--fail-on=upgradable`. Un hallazgo alto o crítico con actualización
+  disponible hace fallar el job; los avisos sin parche publicado se informan.
 - El secreto requerido es `SNYK_TOKEN`, configurado en los secretos del
   repositorio.
 - Compose define dos réplicas como referencia de escalabilidad, límites de
   CPU/memoria y reinicio automático.
 
 La ejecución de Snyk no usa credenciales en el código. Las actualizaciones de
-Dependabot deben revisarse antes de fusionarse.
+Dependabot deben revisarse antes de fusionarse. La imagen runtime usa una base
+Alpine mínima y ejecuta la aplicación como `app`.
 
 ### IE4 — Despliegue y trazabilidad
 
@@ -103,8 +105,8 @@ test + security -> build -> deploy
 
 La imagen se etiqueta con `${GITHUB_SHA}`, de modo que cada ejecución queda
 vinculada al commit que la originó. El job `deploy` levanta Docker Compose en el
-runner, espera la disponibilidad del servicio, verifica `http://localhost:8080/`
-y finalmente apaga el entorno simulado.
+runner, espera la disponibilidad del servicio, verifica HTTP dentro de un
+contenedor saludable y finalmente apaga el entorno simulado.
 
 ### IE5 — Orquestación
 

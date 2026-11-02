@@ -50,11 +50,10 @@ jobs:
 
       - name: Analizar dependencias con Snyk
         uses: snyk/actions/maven@master
-        continue-on-error: true #PERMITE QUE EL PIPELINE CONTINUE AUNQUE SYNK ENCUENTREVULNERABILIDADES
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          args: --severity-threshold=high
+          args: --severity-threshold=high --fail-on=upgradable
 
   build:
     name: Construir imagen Docker
@@ -129,11 +128,21 @@ jobs:
           exit 1
 
       - name: Verificar servicio desplegado
-        run: >-
-          curl --fail --silent --show-error
-          --connect-timeout 5 --max-time 10
-          --retry 18 --retry-delay 5 --retry-all-errors
-          http://localhost:8080/
+        shell: bash
+        run: |
+          containers=$(docker ps -q --filter label=com.docker.swarm.service.name=pagos_pagos-svc)
+          verified=0
+          for container in ${containers}; do
+            echo "Verificando HTTP dentro del contenedor ${container}"
+            if docker exec "${container}" wget -q -O /dev/null --timeout=10 http://127.0.0.1:8080/; then
+              verified=1
+              break
+            fi
+          done
+          if [ "${verified}" -ne 1 ]; then
+            echo "El servicio no respondió dentro de ningún contenedor saludable"
+            exit 1
+          fi
 
       - name: Diagnóstico del despliegue
         if: failure()
