@@ -7,7 +7,7 @@ usa Spring Boot, Java 25, Maven, Spring Data JPA y una base H2 en memoria.
 
 | Componente | Tecnología |
 |---|---|
-| Aplicación | Spring Boot 3.5.0 |
+| Aplicación | Spring Boot 4.0.9 |
 | Lenguaje | Java 25 |
 | Persistencia | Spring Data JPA + H2 |
 | Documentación | springdoc OpenAPI, Swagger UI y ReDoc |

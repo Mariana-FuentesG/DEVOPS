@@ -71,6 +71,11 @@ La evidencia esperada en `docker service ls` es `2/2` en la columna `REPLICAS`.
    Compose como stack con dos réplicas, verifica el endpoint y elimina el
    entorno simulado.
 
+La verificación HTTP usa tiempos máximos de conexión y respuesta para evitar
+que el job quede bloqueado si el servicio no publica el puerto. Si falla,
+el workflow conserva el estado de las tareas y los últimos logs del servicio
+para diagnosticar el arranque.
+
 El job de deploy solo comienza cuando pruebas, seguridad y construcción
 terminaron correctamente. El token de Snyk se entrega mediante el secreto
 `SNYK_TOKEN` y nunca se guarda en el repositorio.
