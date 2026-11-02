@@ -3,7 +3,10 @@ services:
     build: .
     image: duoc/casoejemplo-pagos:${IMAGE_TAG:-local}
     ports:
-      - "${PORT:-8080}:8080"
+      - target: 8080
+        published: ${PORT:-8080}
+        protocol: tcp
+        mode: ingress
     restart: unless-stopped
     deploy:
       replicas: 2

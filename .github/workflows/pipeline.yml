@@ -106,6 +106,28 @@ jobs:
           docker service ps pagos_pagos-svc
           exit 1
 
+      - name: Esperar healthchecks del servicio
+        shell: bash
+        run: |
+          for attempt in {1..30}; do
+            containers=$(docker ps -q --filter label=com.docker.swarm.service.name=pagos_pagos-svc)
+            healthy=0
+            for container in ${containers}; do
+              status=$(docker inspect --format '{{if .State.Health}}{{.State.Health.Status}}{{else}}starting{{end}}' "${container}")
+              echo "${container}: ${status}"
+              if [ "${status}" = "healthy" ]; then
+                healthy=$((healthy + 1))
+              fi
+            done
+            if [ "${healthy}" -eq 2 ]; then
+              exit 0
+            fi
+            sleep 5
+          done
+          docker service ps --no-trunc pagos_pagos-svc
+          docker ps --filter label=com.docker.swarm.service.name=pagos_pagos-svc
+          exit 1
+
       - name: Verificar servicio desplegado
         run: >-
           curl --fail --silent --show-error
