@@ -151,29 +151,21 @@ conflictos al publicar el puerto 8080.
 
 ## Uso de inteligencia artificial
 
-Se utilizó un asistente de IA como apoyo para revisar los requisitos de la EP2,
-proponer la estructura del pipeline, detectar brechas en Docker/Compose y
-mejorar la documentación. El equipo debe revisar y validar cada cambio antes
-de entregarlo. Las reflexiones individuales y las conclusiones personales
-deben ser redactadas por cada integrante sin apoyo de IA.
-
-## Entrega y revisión
-
-El equipo debe trabajar mediante ramas y Pull Requests, revisar el resultado
-del pipeline en la pestaña Actions y entregar el enlace del repositorio según
-las instrucciones de la asignatura.
+Se utilizó la IA de GitHub Copilot como apoyo para revisar los requisitos de la EP2,
+proponer la estructura del pipeline, detectar brechas en Docker/Compose y realizar consultas,
+dudas y problemas que fueron surgiendo durante la realización de la evaluación.
 
 ## Reflexiones individuales
 
-Las siguientes reflexiones deben ser redactadas por cada integrante sin apoyo
-de inteligencia artificial, según las instrucciones de la evaluación.
-
 ### Reflexión de Benjamin Gonzalez Araya
 
-_Pendiente de completar por Benjamin: describe con tus propias palabras tu
-aprendizaje, tu contribución al proyecto y las dificultades que resolviste._
+A partir de esta evaluación logre aprender un poco más acerca de las herramientas y buenas practicas
+en el area DevOps, aprendí herramientas nuevas como Snyk, logre entender mejor el flujo ci/cd del actions en github,
+la asignación de recursos a la hora de configurar un archivo docker, y siempre aprendiendo de cada falla,
+error y problema que iba apareciendo. Mi contribución directa al proyecto fue configurar archivos docker, archivos .yaml
+para el flujo de github actions, testeo, integración de snyk, entre otros.
 
 ### Reflexión de Mariana Fuentes Gonzalez
 
-_Pendiente de completar por Mariana: describe con tus propias palabras tu
-aprendizaje, tu contribución al proyecto y las dificultades que resolviste._
+Describir con tus propias palabras tu
+aprendizaje, tu contribución al proyecto y las dificultades que resolviste.
