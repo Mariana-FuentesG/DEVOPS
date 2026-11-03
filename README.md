@@ -7,7 +7,7 @@ usa Spring Boot, Java 25, Maven, Spring Data JPA y una base H2 en memoria.
 
 | Componente | Tecnología |
 |---|---|
-| Aplicación | Spring Boot 3.5.0 |
+| Aplicación | Spring Boot 4.0.9 |
 | Lenguaje | Java 25 |
 | Persistencia | Spring Data JPA + H2 |
 | Documentación | springdoc OpenAPI, Swagger UI y ReDoc |
@@ -82,15 +82,17 @@ prueba falla, para facilitar la revisión.
 
 - `.github/dependabot.yml` revisa semanalmente las dependencias Maven y las
   acciones de GitHub.
-- El job `security` ejecuta Snyk con `--severity-threshold=high`. Un hallazgo
-  alto o crítico hace fallar el job y bloquea los jobs siguientes.
+- El job `security` ejecuta Snyk con `--severity-threshold=high` y
+  `--fail-on=upgradable`. Un hallazgo alto o crítico con actualización
+  disponible hace fallar el job; los avisos sin parche publicado se informan.
 - El secreto requerido es `SNYK_TOKEN`, configurado en los secretos del
   repositorio.
 - Compose define dos réplicas como referencia de escalabilidad, límites de
   CPU/memoria y reinicio automático.
 
 La ejecución de Snyk no usa credenciales en el código. Las actualizaciones de
-Dependabot deben revisarse antes de fusionarse.
+Dependabot deben revisarse antes de fusionarse. La imagen runtime usa una base
+Alpine mínima y ejecuta la aplicación como `app`.
 
 ### IE4 — Despliegue y trazabilidad
 
@@ -103,8 +105,8 @@ test + security -> build -> deploy
 
 La imagen se etiqueta con `${GITHUB_SHA}`, de modo que cada ejecución queda
 vinculada al commit que la originó. El job `deploy` levanta Docker Compose en el
-runner, espera la disponibilidad del servicio, verifica `http://localhost:8080/`
-y finalmente apaga el entorno simulado.
+runner, espera la disponibilidad del servicio, verifica HTTP dentro de un
+contenedor saludable y finalmente apaga el entorno simulado.
 
 ### IE5 — Orquestación
 
@@ -132,10 +134,12 @@ curl --fail http://localhost:8080/
 docker stack rm pagos
 ```
 
-El workflow realiza estos mismos pasos automáticamente. `deploy.replicas`,
-`resources`, `restart_policy` y `update_config` se aplican al desplegar como
-stack. En Compose local se mantiene una instancia para evitar conflictos al
-publicar el puerto 8080.
+El workflow automatiza estos pasos. Después de desplegar, espera `2/2`
+réplicas y sus healthchecks, y verifica HTTP dentro de un contenedor saludable
+para evitar depender del routing mesh del runner de GitHub. Las opciones
+`deploy.replicas`, `resources`, `restart_policy` y `update_config` se aplican
+al desplegar como stack. En Compose local se mantiene una instancia para evitar
+conflictos al publicar el puerto 8080.
 
 ## Documentación adicional
 
@@ -147,14 +151,21 @@ publicar el puerto 8080.
 
 ## Uso de inteligencia artificial
 
-Se utilizó un asistente de IA como apoyo para revisar los requisitos de la EP2,
-proponer la estructura del pipeline, detectar brechas en Docker/Compose y
-mejorar la documentación. El equipo debe revisar y validar cada cambio antes
-de entregarlo. Las reflexiones individuales y las conclusiones personales
-deben ser redactadas por cada integrante sin apoyo de IA.
+Se utilizó la IA de GitHub Copilot como apoyo para revisar los requisitos de la EP2,
+proponer la estructura del pipeline, detectar brechas en Docker/Compose y realizar consultas,
+dudas y problemas que fueron surgiendo durante la realización de la evaluación.
 
-## Entrega y revisión
+## Reflexiones individuales
 
-El equipo debe trabajar mediante ramas y Pull Requests, revisar el resultado
-del pipeline en la pestaña Actions y entregar el enlace del repositorio según
-las instrucciones de la asignatura.
+### Reflexión de Benjamin Gonzalez Araya
+
+A partir de esta evaluación logre aprender un poco más acerca de las herramientas y buenas practicas
+en el area DevOps, aprendí herramientas nuevas como Snyk, logre entender mejor el flujo ci/cd del actions en github,
+la asignación de recursos a la hora de configurar un archivo docker, y siempre aprendiendo de cada falla,
+error y problema que iba apareciendo. Mi contribución directa al proyecto fue configurar archivos docker, archivos .yaml
+para el flujo de github actions, testeo, integración de snyk, entre otros.
+
+### Reflexión de Mariana Fuentes Gonzalez
+
+Describir con tus propias palabras tu
+aprendizaje, tu contribución al proyecto y las dificultades que resolviste.

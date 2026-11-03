@@ -65,11 +65,18 @@ La evidencia esperada en `docker service ls` es `2/2` en la columna `REPLICAS`.
 `.github/workflows/pipeline.yml` ejecuta cuatro etapas:
 
 1. `test`: corre `mvn verify`, incluyendo cobertura.
-2. `security`: ejecuta Snyk y bloquea hallazgos de severidad alta o crítica.
+2. `security`: ejecuta Snyk y bloquea hallazgos altos o críticos que tengan
+   actualización disponible. Los hallazgos sin parche publicado se informan,
+   pero no se ocultan.
 3. `build`: construye la imagen con una etiqueta igual al SHA del commit.
 4. `deploy`: construye la imagen trazable, inicializa Docker Swarm, despliega
    Compose como stack con dos réplicas, verifica el endpoint y elimina el
    entorno simulado.
+
+La verificación HTTP se ejecuta dentro de un contenedor saludable para evitar
+dependencia del routing mesh del runner de GitHub. Si falla, el workflow
+conserva el estado de las tareas y los últimos logs del servicio para
+diagnosticar el arranque.
 
 El job de deploy solo comienza cuando pruebas, seguridad y construcción
 terminaron correctamente. El token de Snyk se entrega mediante el secreto

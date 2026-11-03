@@ -9,7 +9,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.lang.NonNull;
 import cl.duoc.casoEjemplo.pagos.model.Pago;
 import cl.duoc.casoEjemplo.pagos.repository.PagoRepository;
 import cl.duoc.casoEjemplo.pagos.service.PagoService;
@@ -20,7 +19,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-@SuppressWarnings("null")
 class PagoServiceTest {
 
     @Mock
@@ -29,7 +27,6 @@ class PagoServiceTest {
     @InjectMocks
     private PagoService service;
 
-    @NonNull
     private Pago recurso() {
         Pago r = new Pago();
         r.setId(1L);
