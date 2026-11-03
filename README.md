@@ -134,10 +134,12 @@ curl --fail http://localhost:8080/
 docker stack rm pagos
 ```
 
-El workflow realiza estos mismos pasos automáticamente. `deploy.replicas`,
-`resources`, `restart_policy` y `update_config` se aplican al desplegar como
-stack. En Compose local se mantiene una instancia para evitar conflictos al
-publicar el puerto 8080.
+El workflow automatiza estos pasos. Después de desplegar, espera `2/2`
+réplicas y sus healthchecks, y verifica HTTP dentro de un contenedor saludable
+para evitar depender del routing mesh del runner de GitHub. Las opciones
+`deploy.replicas`, `resources`, `restart_policy` y `update_config` se aplican
+al desplegar como stack. En Compose local se mantiene una instancia para evitar
+conflictos al publicar el puerto 8080.
 
 ## Documentación adicional
 
@@ -160,3 +162,18 @@ deben ser redactadas por cada integrante sin apoyo de IA.
 El equipo debe trabajar mediante ramas y Pull Requests, revisar el resultado
 del pipeline en la pestaña Actions y entregar el enlace del repositorio según
 las instrucciones de la asignatura.
+
+## Reflexiones individuales
+
+Las siguientes reflexiones deben ser redactadas por cada integrante sin apoyo
+de inteligencia artificial, según las instrucciones de la evaluación.
+
+### Reflexión de Benjamin Gonzalez Araya
+
+_Pendiente de completar por Benjamin: describe con tus propias palabras tu
+aprendizaje, tu contribución al proyecto y las dificultades que resolviste._
+
+### Reflexión de Mariana Fuentes Gonzalez
+
+_Pendiente de completar por Mariana: describe con tus propias palabras tu
+aprendizaje, tu contribución al proyecto y las dificultades que resolviste._
